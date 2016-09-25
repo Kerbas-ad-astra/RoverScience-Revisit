@@ -105,6 +105,14 @@ namespace RoverScience
             }
         }
 
+        public bool anomalyPresent
+        {
+            get
+            {
+                return ((distanceToClosestAnomaly <= 100) && !Anomalies.Instance.hasCurrentAnomalyBeenAnalyzed());
+            }
+        }
+
         public int numberWheelsLanded
 		{
 			get
@@ -198,10 +206,11 @@ namespace RoverScience
             return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double)0.01) && (numberWheelsLanded > 0));
         }
 
-		private double getRoverHeading()
+        private double getRoverHeading()
 		{
-			Vector3d coM = vessel.findLocalCenterOfMass();
-			Vector3d up = (coM - vessel.mainBody.position).normalized;
+            //Vector3d coM = vessel.findLocalCenterOfMass();
+            Vector3d coM = vessel.localCoM;
+            Vector3d up = (coM - vessel.mainBody.position).normalized;
 			Vector3d north = Vector3d.Exclude(up, (vessel.mainBody.position + 
 				(Vector3d)vessel.mainBody.transform.up * vessel.mainBody.Radius) - coM).normalized;
 
@@ -210,7 +219,9 @@ namespace RoverScience
 			return rotationVesselSurface.eulerAngles.y;
 		}
 
-		private int getWheelCount()
+
+
+        private int getWheelCount()
 		{
 			int wheelCount = 0;
 
@@ -269,15 +280,15 @@ namespace RoverScience
                     distanceClosest = getDistanceBetweenTwoPoints(location, closestAnomaly.location);
                     distanceCheck = getDistanceBetweenTwoPoints(location, anomaly.location);
 
-                    Debug.Log("========" + i + "========");
-                    Debug.Log("distanceClosest: " + distanceClosest);
-                    Debug.Log("distanceCheck: " + distanceCheck);
+                    //Debug.Log("========" + i + "========");
+                    //Debug.Log("distanceClosest: " + distanceClosest);
+                    //Debug.Log("distanceCheck: " + distanceCheck);
 
-                    Debug.Log("Current lat/long: " + location.latitude + "/" + location.longitude);
-                    Debug.Log("Closest Anomaly lat/long: " + closestAnomaly.location.latitude + "/" + closestAnomaly.location.longitude);
-                    Debug.Log("Check Anomaly lat/long: " + anomaly.location.latitude + "/" + anomaly.location.longitude);
+                    //Debug.Log("Current lat/long: " + location.latitude + "/" + location.longitude);
+                    //Debug.Log("Closest Anomaly lat/long: " + closestAnomaly.location.latitude + "/" + closestAnomaly.location.longitude);
+                    //Debug.Log("Check Anomaly lat/long: " + anomaly.location.latitude + "/" + anomaly.location.longitude);
 
-                    Debug.Log("==========<END>==========");
+                    //Debug.Log("==========<END>==========");
 
 
                     if (distanceCheck < distanceClosest)

@@ -31,15 +31,22 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\00_KSP_DEVELOPMENT\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-UnityScript, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-UnityScript.dll</HintPath>
+    </Reference>
+    <Reference Include="KSPCore">
+      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\KSPCore.dll</HintPath>
     </Reference>
     <Reference Include="KSPUtil">
-      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\00_KSP_DEVELOPMENT\KSP_Data\Managed\KSPUtil.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\KSPUtil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\00_KSP_DEVELOPMENT\KSP_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -50,7 +57,7 @@
     <Compile Include="RoverScience.cs" />
     <Compile Include="RoverScienceGUI.cs" />
     <Compile Include="Rover.cs" />
-    <Compile Include="Extension Crap\KSPAddonFix.cs" />
+    <Compile Include="Extension\KSPAddonFix.cs" />
     <Compile Include="GUIClasses.cs" />
     <Compile Include="RandomConsolePrints.cs" />
     <Compile Include="ConsoleGUI.cs" />
@@ -62,5 +69,4 @@
     <Compile Include="UpgradeGUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
 </Project>

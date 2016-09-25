@@ -20,13 +20,13 @@ namespace RoverScience
         float markerSize = 30;
         float markerSizeMax = 30;
 
-        float markerAlpha = 0.7f;
-        float maxAlpha = 0.7f;
+        float markerAlpha = 0.4f;
+        float maxAlpha = 0.4f;
         float minAlpha = 0.05f;
 
         public static DrawWaypoint Instance = null;
-        Color markerColorRed = Color.red;
-        Color markerColorGreen = Color.green;
+        Color markerRed= Color.red;
+        Color markerGreen = Color.green;
 
         string[] rockObjectNames = {"rock", "rock2"};
 
@@ -47,10 +47,10 @@ namespace RoverScience
             // Set marker material, color and alpha
             marker.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Transparent/Diffuse"));
 
-            markerColorRed.a = markerAlpha; // max alpha
-            markerColorGreen.a = markerAlpha; // max alpha
+            markerRed.a = markerAlpha; // max alpha
+            markerGreen.a = markerAlpha; // max alpha
 
-            marker.GetComponent<MeshRenderer>().material.color = markerColorRed; // set to red on awake
+            marker.GetComponent<MeshRenderer>().material.color = markerRed; // set to red on awake
             Debug.Log("Reached end of marker creation");
         }
 
@@ -73,7 +73,7 @@ namespace RoverScience
             //marker.transform.up = cylinderDirectionUp;
 
             marker.transform.localScale = new Vector3(markerSizeMax, markerSizeMax, markerSizeMax);
-            markerColorRed.a = maxAlpha;
+            markerRed.a = maxAlpha;
 
             //attempt to get raycast surface altitude
 
@@ -143,17 +143,20 @@ namespace RoverScience
         private void changeSpherewithDistance(Rover rover)
         {
 
-            float distance = (float)rover.distanceFromScienceSpot;
+            float distanceToRover = (float)rover.distanceFromScienceSpot;
 
-
-            if ((distance < markerSizeMax) && ((distance > rover.scienceSpot.minDistance)))
+            // distance to rover 10
+            // min distance 3
+            // +2 = 5
+            // will keep reducing size as long as distance is over 5
+            if ((distanceToRover < markerSizeMax) && ((distanceToRover > (rover.scienceSpot.minDistance+4))))
             {
                 // Reduce sphere size with proximity
-                markerSize = distance;
+                markerSize = distanceToRover;
                 marker.transform.localScale = new Vector3(markerSize, markerSize, markerSize);
 
                 // Reduce alpha with proximity
-                markerAlpha = (float)(distance / markerSizeMax);
+                markerAlpha = (float)(distanceToRover / markerSizeMax);
                 if (markerAlpha >= maxAlpha)
                 {
                     markerAlpha = maxAlpha;
@@ -162,18 +165,18 @@ namespace RoverScience
                     markerAlpha = minAlpha;
                 }
 
-                markerColorRed.a = markerAlpha;
-                markerColorGreen.a = markerAlpha;
+                markerRed.a = markerAlpha;
+                markerGreen.a = markerAlpha;
 
             }
 
 
 
-            if ((distance <= (rover.scienceSpot.minDistance - 2)) && (distance >= 0))
+            if ((distanceToRover <= (rover.scienceSpot.minDistance)) && (distanceToRover >= 0))
             {
-                marker.GetComponent<MeshRenderer>().material.color = markerColorGreen;
+                marker.GetComponent<MeshRenderer>().material.color = markerGreen;
             } else {
-                marker.GetComponent<MeshRenderer>().material.color = markerColorRed;
+                marker.GetComponent<MeshRenderer>().material.color = markerRed;
             }
 
             //Debug.Log("dist, dist/50, alpha: [" + distance + " / " + distance / 50 + " / " + markerAlpha + "]");
@@ -182,23 +185,27 @@ namespace RoverScience
 
         public void spawnObject(double longitude, double latitude)
         {
-            Debug.Log("RSR: Attempting to spawn object");
-            string randomRockName = rockObjectNames[rand.Next(rockObjectNames.Length)];
-            GameObject test = GameDatabase.Instance.GetModel("RoverScience/rock/" + randomRockName);
-            Debug.Log("Random rock name: " + randomRockName);
-            test.SetActive(true);
+            try
+            {
+                Debug.Log("RSR: Attempting to spawn object");
+                string randomRockName = rockObjectNames[rand.Next(rockObjectNames.Length)];
+                GameObject test = GameDatabase.Instance.GetModel("RoverScience/rock/" + randomRockName);
+                Debug.Log("Random rock name: " + randomRockName);
+                test.SetActive(true);
 
-            interestingObject = GameObject.Instantiate(test) as GameObject;
-            GameObject.Destroy(test);
+                interestingObject = GameObject.Instantiate(test) as GameObject;
+                GameObject.Destroy(test);
 
-            GameObject.Destroy(interestingObject.GetComponent("MeshCollider"));
-            double srfAlt = DrawWaypoint.Instance.getSurfaceAltitude(longitude, latitude);
-            interestingObject.transform.position = FlightGlobals.currentMainBody.GetWorldSurfacePosition(latitude, longitude, srfAlt);
-            interestingObject.transform.up = getUpDown(longitude, latitude, true);
+                GameObject.Destroy(interestingObject.GetComponent("MeshCollider"));
+                double srfAlt = DrawWaypoint.Instance.getSurfaceAltitude(longitude, latitude);
+                interestingObject.transform.position = FlightGlobals.currentMainBody.GetWorldSurfacePosition(latitude, longitude, srfAlt);
+                interestingObject.transform.up = getUpDown(longitude, latitude, true);
+            } catch
+            {
+                Debug.Log("rock model couldn't be found");
+            }
         }
-
-
-
+        
         private void Update()
         {
             if (marker.GetComponent<MeshRenderer>().enabled)
